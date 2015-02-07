@@ -15,28 +15,22 @@ $ npm install --save sails-hook-subscriber
 ```
 
 ## Usage
-In the `api/workers` create your `worker` definitions based on `job type` the `worker` will have to process. Example a worker for `job type` email will be defined in the file `api/workers/EmailWorker.js`. The worker definition will export a `function` which accept `job` to process and `done` a callback to be called once job processing is done.
+In the `api/workers` directory create your `worker definitions` based on `job type` the `worker` will have to process(perform). Example, a worker for `job type` email will be defined in the file `api/workers/EmailWorker.js`. The worker definition must define `perform function` which accept `job` to process ,`done` a callback to be called once job processing is done and `context` which is the [worker context](https://github.com/learnboost/kue#pause-processing). A `work definition` must also specify `concurrency` attribute wich will controll the [concurrency](https://github.com/learnboost/kue#processing-concurrency) of jobs it process. A sample `worker definition` is as below:
 
 ```js
+//in api/workers/EmailWorker.js
 /**
  * @description a worker to perform `email` job type
  * @type {Object}
  */
 var async = require('async');
 module.exports = {
-    /**
-     * [concurrency description]
-     * @type {Number}
-     */
+    //specify worker
+    //job concurrency
     concurrency: 2,
 
-    /**
-     * [perform description]
-     * @param  {[type]}   job     [description]
-     * @param  {Function} done    [description]
-     * @param  {[type]}   context [description]
-     * @return {[type]}           [description]
-     */
+    //perform sending email
+    //job
     perform: function(job, done, context) {
         var email = job.data.to;
 
