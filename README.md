@@ -1,4 +1,4 @@
-sails-hook-publisher
+sails-hook-subscriber
 ====================
 
 [![Build Status](https://travis-ci.org/lykmapipo/sails-hook-subscriber.svg?branch=master)](https://travis-ci.org/lykmapipo/sails-model-new)
