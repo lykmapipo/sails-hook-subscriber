@@ -4,7 +4,7 @@
  *              kue instance ready to perform jobs.
 
  * @param  {Object} sails a sails application
- * @return {Object}
+ * @return {Object} sails-hook-subscriber which follow installable sails-hook spec
  */
 module.exports = function(sails) {
     var kue = require('kue');
@@ -126,13 +126,21 @@ module.exports = function(sails) {
         //attach all workers to queue
         //ready to process their jobs
         _.keys(workers).forEach(function(worker) {
+            //deduce job type form worker name
             var jobType = worker.split('W')[0].toLowerCase();
+
+            //grab worker definition from
+            //loaded workers
             var workerDefinition = workers[worker];
 
+            //tell subscriber about the 
+            //worker definition
+            //and register if 
+            //ready to perform available jobs
             subscriber
                 .process(
                     jobType,
-                    workerDefinition.concurrency | 1,
+                    workerDefinition.concurrency || 1,
                     workerDefinition.perform
                 );
         });

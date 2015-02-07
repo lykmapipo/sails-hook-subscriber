@@ -4,19 +4,12 @@
  */
 var async = require('async');
 module.exports = {
-    /**
-     * [concurrency description]
-     * @type {Number}
-     */
+    //worker concurrency
     concurrency: 2,
 
-    /**
-     * [perform description]
-     * @param  {[type]}   job     [description]
-     * @param  {Function} done    [description]
-     * @param  {[type]}   context [description]
-     * @return {[type]}           [description]
-     */
+    //sending emails
+    //note!: we have access of
+    //of all of sails
     perform: function(job, done, context) {
         var email = job.data.to;
 
