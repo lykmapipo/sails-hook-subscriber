@@ -1,0 +1,51 @@
+{
+    "name": "sails-hook-subscriber",
+    "version": "0.1.0",
+    "description": "Kue based job subscriber(consumer and workers pool) for sails",
+    "main": "index.js",
+    "scripts": {
+        "dev": "node ./api/app.js",
+        "test": "npm link && npm link sails-hook-subscriber && ./node_modules/.bin/mocha --timeout 10000"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/lykmapipo/sails-hook-subscriber.git"
+    },
+    "author": "Lally Elias",
+    "license": "MIT",
+    "bugs": {
+        "url": "hhttps://github.com/lykmapipo/sails-hook-subscriber/issues"
+    },
+    "homepage": "https://github.com/lykmapipo/sails-hook-subscriber",
+    "contributors": [{
+        "name": "lykmapipo",
+        "github": "https://github.com/lykmapipo"
+    }],
+    "keywords": [
+        "sails",
+        "kue",
+        "queue",
+        "subscriber",
+        "pubsub",
+        "consumer",
+        "workers",
+        "job",
+        "redis"
+    ],
+    "sails": {
+        "isHook": true
+    },
+    "dependencies": {
+        "async": "^0.9.0",
+        "include-all": "^0.1.6",
+        "kue": "^0.8.11",
+        "lodash": "^3.1.0"
+    },
+    "devDependencies": {
+        "chai": "^1.10.0",
+        "faker": "^2.1.2",
+        "mocha": "^2.1.0",
+        "sails": "^0.11.0-rc10",
+        "sails-disk": "^0.10.7"
+    }
+}
