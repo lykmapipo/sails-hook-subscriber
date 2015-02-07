@@ -9,6 +9,8 @@ sails-hook-publisher
 
 Kue based job subscriber(consumer and workers pool) for sails. Its a wrapper around [Kue](https://github.com/learnboost/kue) for processing published jobs by using [redis](https://github.com/antirez/redis) as a queue engine.
 
+*Note: This requires Sails v0.11.0+.  If v0.11.0+ isn't published to NPM yet, you'll need to install it via Github.*
+
 ## Installation
 ```js
 $ npm install --save sails-hook-subscriber
