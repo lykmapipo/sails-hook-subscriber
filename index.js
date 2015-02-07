@@ -18,8 +18,8 @@ module.exports = function(sails) {
 
         //Defaults configurations
         defaults: {
-            //default key prefix for kue in
-            //redis server
+            // default key prefix for kue in
+            // redis server
             prefix: 'q',
 
             //default redis configuration

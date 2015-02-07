@@ -31,6 +31,7 @@ describe('Hook#subscriber', function() {
         done();
     });
 
+
     it('should be able to process jobs published to it', function(done) {
         var publisher = kue.createQueue();
 
