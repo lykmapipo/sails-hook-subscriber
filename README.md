@@ -1,7 +1,7 @@
 sails-hook-subscriber
 ====================
 
-[![Build Status](https://travis-ci.org/lykmapipo/sails-hook-subscriber.svg?branch=master)](https://travis-ci.org/lykmapipo/sails-model-new)
+[![Build Status](https://travis-ci.org/lykmapipo/sails-hook-subscriber.svg?branch=master)](https://travis-ci.org/lykmapipo/sails-hook-subscriber)
 
 [![Tips](https://img.shields.io/gratipay/lykmapipo.svg)](https://gratipay.com/lykmapipo/)
 
@@ -82,7 +82,7 @@ module.exports = {
 
 };
 ``` 
-Thats all you are supposed to do and `sails-hook-subscriber` will do the heavy lifting to setup `kue` and use  `workers` to proess jobs whenever they are available in the `queue`.
+Thats all you are supposed to do and `sails-hook-subscriber` will do the heavy lifting to setup `kue` and use  `workers` to process jobs whenever they are available in the `queue`.
 
 ## Configuration
 `sails-hook-subscriber` accept application defined configuration by utilizing sails configuration api. In sails `config` directory add `config/subscriber.js` and you will be able to override all the defauts configurations.

@@ -60,8 +60,8 @@ module.exports = function(sails) {
                 _.extend(hook.defaults, sails.config.subscriber);
 
             // Lets wait on some of the sails core hooks to
-            // finish loading before we load our hook
-            // that talks about cats. 
+            // finish loading before 
+            // load `sails-hook-subscriber`
             var eventsToWaitFor = [];
 
             if (sails.hooks.orm) {
@@ -106,6 +106,12 @@ module.exports = function(sails) {
                     //subscriber
                     sails.on("lower", shutdown);
                     sails.on("lowering", shutdown);
+
+                    //tell external world we are up
+                    //and running
+                    sails.on('lifted', function() {
+                        sails.log('sails-hook-subscriber loaded successfully');
+                    });
 
                     // finalize subscriber setup
                     done();
