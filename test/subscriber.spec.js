@@ -65,4 +65,36 @@ describe('Hook#subscriber', function() {
                 });
     });
 
+    it('should be able to process jobs published to workers having `w` in their names', function(done) {
+        var publisher = kue.createQueue();
+
+        User
+            .create({
+                    username: faker.internet.userName(),
+                    email: email
+                },
+                function(error, user) {
+                    if (error) {
+                        done(error);
+                    } else {
+                        publisher
+                            .create('waterlock', {
+                                title: 'welcome ' + user.username,
+                                to: user.email,
+                                message: 'welcome !!'
+                            })
+                            .on('complete', function(deliveryStatus) {
+                                expect(deliveryStatus.sentAt).to.not.be.null;
+                                expect(deliveryStatus.status).to.not.be.null;
+                                done();
+                            })
+                            .save(function(error) {
+                                if (error) {
+                                    done(error);
+                                }
+                            });
+                    }
+                });
+    });
+
 });
