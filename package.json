@@ -5,7 +5,9 @@
     "main": "index.js",
     "scripts": {
         "dev": "node ./api/app.js",
-        "test": "npm link && npm link sails-hook-subscriber && ./node_modules/.bin/mocha --timeout 10000"
+        "pretest": "npm link && npm link sails-hook-subscriber",
+        "test": "grunt test",
+        "posttest": "rm -rf .tmp"
     },
     "repository": {
         "type": "git",
@@ -37,15 +39,19 @@
     },
     "dependencies": {
         "include-all": "^0.1.6",
-        "kue": "^0.8.11",
-        "lodash": "^3.1.0"
+        "kue": "^0.8.12",
+        "lodash": "^3.8.0"
     },
     "devDependencies": {
         "async": "^0.9.0",
         "chai": "^1.10.0",
         "faker": "^2.1.2",
+        "grunt": "^0.4.5",
+        "grunt-contrib-jshint": "^0.11.2",
+        "grunt-mocha-test": "^0.12.7",
+        "jshint-stylish": "^1.0.2",
         "mocha": "^2.1.0",
-        "sails": "^0.11.0-rc10",
+        "sails": "^0.11.0",
         "sails-disk": "^0.10.7"
     }
 }

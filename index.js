@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * @description Kue based job subscriber(consumer and workers pool) for sails.
  *              It loads all worker defined at `api/workers` and bind them to
@@ -9,6 +11,40 @@
 module.exports = function(sails) {
     var kue = require('kue');
     var _ = require('lodash');
+
+    //workers loader
+    function initializeWorkers() {
+        //find all workers
+        //defined at `api/workers`
+        var workers = require('include-all')({
+            dirname: sails.config.appPath + '/api/workers',
+            filter: /(.+Worker)\.js$/,
+            excludeDirs: /^\.(git|svn)$/,
+            optional: true
+        });
+
+        //attach all workers to queue
+        //ready to process their jobs
+        _.keys(workers).forEach(function(worker) {
+            //deduce job type form worker name
+            var jobType = worker.replace(/Worker$/, '').toLowerCase();
+
+            //grab worker definition from
+            //loaded workers
+            var workerDefinition = workers[worker];
+
+            //tell subscriber about the 
+            //worker definition
+            //and register if 
+            //ready to perform available jobs
+            subscriber
+                .process(
+                    jobType,
+                    workerDefinition.concurrency || 1,
+                    workerDefinition.perform
+                );
+        });
+    }
 
     //reference kue based queue
     var subscriber;
@@ -100,12 +136,12 @@ module.exports = function(sails) {
                                 sails.emit('subscribe:shutdown', error || '');
 
                             }, config.shutdownDelay);
-                    };
+                    }
 
                     //gracefully shutdown
                     //subscriber
-                    sails.on("lower", shutdown);
-                    sails.on("lowering", shutdown);
+                    sails.on('lower', shutdown);
+                    sails.on('lowering', shutdown);
 
                     //tell external world we are up
                     //and running
@@ -117,39 +153,6 @@ module.exports = function(sails) {
                     done();
                 });
         }
-    };
-
-    function initializeWorkers() {
-        //find all workers
-        //defined at `api/workers`
-        var workers = require('include-all')({
-            dirname: sails.config.appPath + '/api/workers',
-            filter: /(.+Worker)\.js$/,
-            excludeDirs: /^\.(git|svn)$/,
-            optional: true
-        });
-
-        //attach all workers to queue
-        //ready to process their jobs
-        _.keys(workers).forEach(function(worker) {
-            //deduce job type form worker name
-            var jobType = worker.split('W')[0].toLowerCase();
-
-            //grab worker definition from
-            //loaded workers
-            var workerDefinition = workers[worker];
-
-            //tell subscriber about the 
-            //worker definition
-            //and register if 
-            //ready to perform available jobs
-            subscriber
-                .process(
-                    jobType,
-                    workerDefinition.concurrency || 1,
-                    workerDefinition.perform
-                );
-        });
     };
 
 };

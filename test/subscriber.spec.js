@@ -1,7 +1,8 @@
+'use strict';
+
 var expect = require('chai').expect;
 var kue = require('kue');
 var faker = require('faker');
-var async = require('async');
 
 var email = faker.internet.email();
 
@@ -44,7 +45,7 @@ describe('Hook#subscriber', function() {
                     if (error) {
                         done(error);
                     } else {
-                        var job = publisher
+                        publisher
                             .create('email', {
                                 title: 'welcome ' + user.username,
                                 to: user.email,
