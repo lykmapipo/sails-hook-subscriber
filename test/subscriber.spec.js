@@ -14,12 +14,16 @@ describe('Hook#subscriber', function() {
     });
 
     it('should have defaults configuration', function(done) {
-        var subscriber = sails.hooks.subscriber;
+        expect(sails.config.subscriber).to.not.be.null;
+        expect(sails.config.subscriber.prefix).to.equal('q');
+        expect(sails.config.subscriber.redis.port).to.equal(6379);
+        expect(sails.config.subscriber.redis.host).to.equal('127.0.0.1');
 
-        expect(subscriber.defaults).to.not.be.null;
-        expect(subscriber.defaults.prefix).to.equal('q');
-        expect(subscriber.defaults.redis.port).to.equal(6379);
-        expect(subscriber.defaults.redis.host).to.equal('127.0.0.1');
+        done();
+    });
+
+    it('should be active per default', function(done) {
+        expect(sails.config.subscriber.active).to.be.true;
 
         done();
     });
