@@ -54,28 +54,34 @@ module.exports = function(sails) {
 
         //Defaults configurations
         defaults: {
-            // default key prefix for kue in
-            // redis server
-            prefix: 'q',
 
-            //default redis configuration
-            redis: {
-                //default redis server port
-                port: 6379,
-                //default redis server host
-                host: '127.0.0.1'
-            },
-            //number of milliseconds
-            //to wait for workers to 
-            //finish their current active job(s)
-            //before shutdown
-            shutdownDelay: 5000,
-            //number of millisecond to
-            //wait until promoting delayed jobs
-            promotionDelay: 5000,
-            //number of delated jobs
-            //to be promoted
-            promotionLimit: 200
+            __configKey__: {
+                // Set subscriber to be active by default
+                active: true,
+                // default key prefix for kue in
+                // redis server
+                prefix: 'q',
+
+                //default redis configuration
+                redis: {
+                    //default redis server port
+                    port: 6379,
+                    //default redis server host
+                    host: '127.0.0.1'
+                },
+                //number of milliseconds
+                //to wait for workers to 
+                //finish their current active job(s)
+                //before shutdown
+                shutdownDelay: 5000,
+                //number of millisecond to
+                //wait until promoting delayed jobs
+                promotionDelay: 5000,
+                //number of delated jobs
+                //to be promoted
+                promotionLimit: 200
+            }
+
         },
 
         //expose this hook kue worker pool
@@ -89,16 +95,19 @@ module.exports = function(sails) {
             //reference this hook
             var hook = this;
 
-            //extend defaults configuration
-            //with provided configuration from sails
-            //config
-            var config =
-                _.extend(hook.defaults, sails.config.subscriber);
+            //get extended config
+            var config = sails.config[this.configKey];
 
             // Lets wait on some of the sails core hooks to
             // finish loading before 
             // load `sails-hook-subscriber`
             var eventsToWaitFor = [];
+
+            // If the hook has been deactivated, just return
+            if (!config.active) {
+                sails.log.info('sails-hooks-subscriber deactivated.');
+                return done();
+            }
 
             if (sails.hooks.orm) {
                 eventsToWaitFor.push('hook:orm:loaded');
