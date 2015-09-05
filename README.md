@@ -3,13 +3,9 @@ sails-hook-subscriber
 
 [![Build Status](https://travis-ci.org/lykmapipo/sails-hook-subscriber.svg?branch=master)](https://travis-ci.org/lykmapipo/sails-hook-subscriber)
 
-[![Tips](https://img.shields.io/gratipay/lykmapipo.svg)](https://gratipay.com/lykmapipo/)
+Kue based job subscriber(consumer and workers pool) for sails v0.11.0+. Its a wrapper around [Kue](https://github.com/learnboost/kue) for processing published jobs by using [redis](https://github.com/antirez/redis) as a queue engine.
 
-[![Support via Gratipay](https://cdn.rawgit.com/gratipay/gratipay-badge/2.3.0/dist/gratipay.svg)](https://gratipay.com/lykmapipo/)
-
-Kue based job subscriber(consumer and workers pool) for sails. Its a wrapper around [Kue](https://github.com/learnboost/kue) for processing published jobs by using [redis](https://github.com/antirez/redis) as a queue engine.
-
-*Note: This requires Sails v0.11.0+.  If v0.11.0+ isn't published to NPM yet, you'll need to install it via Github.*
+*Warning: v1.0.0 upgrade to use kue v0.9.4 and cause API break on define worker perfom function. Now `context` is a second parameter and `done callback` is the last parameter*
 
 ## Installation
 ```js
@@ -17,7 +13,13 @@ $ npm install --save sails-hook-subscriber
 ```
 
 ## Usage
-In the `api/workers` directory create your `worker definitions` based on `job type` the `worker` will have to process(perform). Example, a worker for `job type` email will be defined in the file `api/workers/EmailWorker.js`. The worker definition must define `perform function` which accept `job` to process ,`done` a callback to be called once job processing is done and `context` which is the [worker context](https://github.com/learnboost/kue#pause-processing). A `work definition` must also specify `concurrency` attribute wich will controll the [concurrency](https://github.com/learnboost/kue#processing-concurrency) of jobs it process. A sample `worker definition` is as below:
+In the `api/workers` directory create your `worker definitions` based on `job type` the `worker` will have to process(perform). Example, a worker for `job type` email will be defined in the file `api/workers/EmailWorker.js`. 
+
+The worker definition must define 
+- `perform(job, context, done)` perform function which accept `job` to process, `context` which is the [worker context](https://github.com/learnboost/kue#pause-processing) and `done` a callback to be called once job processing is done. 
+- `concurrency` attribute which controll the [concurrency](https://github.com/learnboost/kue#processing-concurrency) of jobs it process. 
+
+A sample `worker definition` is as below:
 
 ```js
 //in api/workers/EmailWorker.js
@@ -33,7 +35,7 @@ module.exports = {
 
     //perform sending email
     //job
-    perform: function(job, done, context) {
+    perform: function(job, context,  done) {
         var email = job.data.to;
 
         //send email

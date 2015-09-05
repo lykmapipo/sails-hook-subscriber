@@ -1,6 +1,6 @@
 {
     "name": "sails-hook-subscriber",
-    "version": "0.1.4",
+    "version": "1.0.0",
     "description": "Kue based job subscriber(consumer and workers pool) for sails",
     "main": "index.js",
     "scripts": {
@@ -39,8 +39,8 @@
     },
     "dependencies": {
         "include-all": "^0.1.6",
-        "kue": "^0.8.12",
-        "lodash": "^3.8.0"
+        "kue": "^0.9.4",
+        "lodash": "^3.10.1"
     },
     "devDependencies": {
         "async": "^0.9.0",

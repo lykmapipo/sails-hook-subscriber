@@ -119,23 +119,15 @@ module.exports = function(sails) {
                     //attach workerPool
                     hook.workerPool = subscriber;
 
-                    //promote delayed jobs
-                    //TODO what if sails started in clustering mode?
-                    subscriber
-                        .promote(
-                            config.promotionDelay,
-                            config.promotionLimit
-                        );
 
                     //shutdown kue subscriber
                     //and wait for time equla to `shutdownDelay` 
                     //for workers to finalize their jobs
                     function shutdown() {
                         subscriber
-                            .shutdown(function(error) {
+                            .shutdown(config.shutdownDelay, function(error) {
                                 sails.emit('subscribe:shutdown', error || '');
-
-                            }, config.shutdownDelay);
+                            });
                     }
 
                     //gracefully shutdown
