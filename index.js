@@ -56,8 +56,10 @@ module.exports = function(sails) {
         defaults: {
 
             __configKey__: {
-                // Set subscriber to be active by default
+                //control activeness of subscribe
+                //its active by default
                 active: true,
+
                 // default key prefix for kue in
                 // redis server
                 prefix: 'q',

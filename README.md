@@ -96,6 +96,10 @@ module.exports.subscriber = {
     //redis server
     prefix: 'q',
 
+    //control activeness of subscribe
+    //its active by default
+    active:true,
+
     //default redis configuration
     redis: {
         //default redis server port
