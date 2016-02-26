@@ -120,7 +120,9 @@ module.exports.subscriber = {
     promotionLimit: 200,
     
     //prefix to add to job types
-    jobTypePrefix: ''
+    jobTypePrefix: '',
+    //prefix to add to uppercase letters in the job type (except first uppercase letter)
+    jobTypePrefixUppercase: ''
 }
 ```
 

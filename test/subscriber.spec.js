@@ -19,6 +19,7 @@ describe('Hook#subscriber', function() {
         expect(sails.config.subscriber.redis.port).to.equal(6379);
         expect(sails.config.subscriber.redis.host).to.equal('127.0.0.1');
         expect(sails.config.subscriber.jobTypePrefix).to.equal('');
+        expect(sails.config.subscriber.jobTypePrefixUppercase).to.equal('');
 
         done();
     });
