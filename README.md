@@ -117,7 +117,10 @@ module.exports.subscriber = {
     promotionDelay: 5000,
     //number of delated jobs
     //to be promoted
-    promotionLimit: 200
+    promotionLimit: 200,
+    
+    //prefix to add to job types
+    jobTypePrefix: ''
 }
 ```
 
@@ -136,6 +139,8 @@ $ npm install
 ```sh
 $ npm test
 ```
+
+**Note**: If you don't have `grunt-cli` installed, the tests may not run correctly. Install `grunt-cli` globally with `npm install -g grunt-cli`
 
 ## Contribute
 

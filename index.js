@@ -13,7 +13,7 @@ module.exports = function(sails) {
     var _ = require('lodash');
 
     //workers loader
-    function initializeWorkers() {
+    function initializeWorkers(config) {
         //find all workers
         //defined at `api/workers`
         var workers = require('include-all')({
@@ -26,8 +26,8 @@ module.exports = function(sails) {
         //attach all workers to queue
         //ready to process their jobs
         _.keys(workers).forEach(function(worker) {
-            //deduce job type form worker name
-            var jobType = worker.replace(/Worker$/, '').toLowerCase();
+            //deduce job type form worker name (add prefix)
+            var jobType = config.jobTypePrefix + worker.replace(/Worker$/, '').toLowerCase();
 
             //grab worker definition from
             //loaded workers
@@ -81,7 +81,10 @@ module.exports = function(sails) {
                 promotionDelay: 5000,
                 //number of delated jobs
                 //to be promoted
-                promotionLimit: 200
+                promotionLimit: 200,
+
+                //prefix to add to job types
+                jobTypePrefix: ''
             }
 
         },
@@ -125,7 +128,7 @@ module.exports = function(sails) {
                     subscriber = kue.createQueue(config);
 
                     //initialize workers
-                    initializeWorkers();
+                    initializeWorkers(config);
 
                     //attach workerPool
                     hook.workerPool = subscriber;
@@ -155,6 +158,19 @@ module.exports = function(sails) {
                     // finalize subscriber setup
                     done();
                 });
+        },
+
+        reload: function(done) {
+            sails.log.info('Reloading sails-hook-subscriber.');
+            done = done || function(){};
+            //get extended config
+            var config = sails.config[this.configKey];
+
+            subscriber.workers = [];
+
+            initializeWorkers(config);
+
+            done();
         }
     };
 

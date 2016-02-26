@@ -18,6 +18,7 @@ describe('Hook#subscriber', function() {
         expect(sails.config.subscriber.prefix).to.equal('q');
         expect(sails.config.subscriber.redis.port).to.equal(6379);
         expect(sails.config.subscriber.redis.host).to.equal('127.0.0.1');
+        expect(sails.config.subscriber.jobTypePrefix).to.equal('');
 
         done();
     });
@@ -100,5 +101,54 @@ describe('Hook#subscriber', function() {
                     }
                 });
     });
+
+    it('should correctly register a job type with a prefix if specified', function(done) {
+        var jobTypePrefix = 'prefix.';
+
+        // Set a prefix and reload
+        sails.config.subscriber.jobTypePrefix = jobTypePrefix;
+        sails.hooks.subscriber.reload(function(err) {
+            if (err) {
+                return done(err);
+            }
+            User
+                .create({
+                    username: faker.internet.userName(),
+                    email: email
+                },
+                function(error, user) {
+                    if (error) {
+                        done(error);
+                    } else {
+                      var publisher = kue.createQueue();
+                        var jobType = jobTypePrefix + 'email';
+                        publisher
+                            .create(jobType, {
+                                title: 'welcome ' + user.username,
+                                to: user.email,
+                                message: 'welcome !!'
+                            })
+                            .on('complete', function(deliveryStatus) {
+                                expect(deliveryStatus.sentAt).to.not.be.null;
+                                expect(deliveryStatus.status).to.not.be.null;
+
+                                // Reset the prefix and reload
+                                sails.config.subscriber.jobTypePrefix = '';
+                                sails.hooks.subscriber.reload(function(err) {
+                                    done(err);
+                                });
+                            })
+                            .save(function(error) {
+                                if (error) {
+                                    done(error);
+                                }
+                            });
+                    }
+                });
+
+        });
+
+
+  });
 
 });
