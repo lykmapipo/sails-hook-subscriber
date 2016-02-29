@@ -148,8 +148,36 @@ describe('Hook#subscriber', function() {
                 });
 
         });
+    });
 
+    it('should correctly be able to add prefixes to uppercase letters in the job type', function(done) {
+      // Set a prefix and reload
+      sails.config.subscriber.jobTypePrefixUppercase = '.';
+      sails.hooks.subscriber.reload(function(err) {
+        if (err) {
+          return done(err);
+        }
 
-  });
+        var publisher = kue.createQueue();
+        var jobType = 'multiple.words';
+        publisher
+          .create(jobType)
+          .on('complete', function() {
+
+            // Reset the prefix and reload
+            sails.config.subscriber.jobTypePrefixUppercase = '';
+            sails.hooks.subscriber.reload(function(err) {
+              done(err);
+            });
+          })
+          .save(function(error) {
+            if (error) {
+              done(error);
+            }
+          });
+
+      });
+    });
+
 
 });
