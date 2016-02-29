@@ -12,8 +12,31 @@ module.exports = function(sails) {
     var kue = require('kue');
     var _ = require('lodash');
 
+    /**
+     * Determines the job type of a worker.
+     *
+     * @param {string} worker Filename (without .js suffix) of worker
+     * @param {object} config Configuration object for this hook
+     * @returns {string}
+     */
+    function getJobType(worker, config) {
+        var jobType = config.jobTypePrefix + worker.replace(/Worker$/, '');
+
+        // Prefix all uppercase letters (except the first one)
+        if (config.jobTypePrefixUppercase) {
+            // Convert first letter to lowercase, so that doesn't get prefixed.
+            jobType = jobType
+                    .replace(/\W+/g, config.jobTypePrefixUppercase)
+                    .replace(/([a-z\d])([A-Z])/g, '$1' + config.jobTypePrefixUppercase + '$2');
+        }
+        // Convert job type entirely to lowercase
+        jobType = jobType.toLowerCase();
+
+        return jobType;
+    }
+
     //workers loader
-    function initializeWorkers() {
+    function initializeWorkers(config) {
         //find all workers
         //defined at `api/workers`
         var workers = require('include-all')({
@@ -26,8 +49,8 @@ module.exports = function(sails) {
         //attach all workers to queue
         //ready to process their jobs
         _.keys(workers).forEach(function(worker) {
-            //deduce job type form worker name
-            var jobType = worker.replace(/Worker$/, '').toLowerCase();
+            // deduce job type form worker name (add prefix)
+            var jobType = getJobType(worker, config);
 
             //grab worker definition from
             //loaded workers
@@ -81,7 +104,12 @@ module.exports = function(sails) {
                 promotionDelay: 5000,
                 //number of delated jobs
                 //to be promoted
-                promotionLimit: 200
+                promotionLimit: 200,
+
+                //prefix to add to job types
+                jobTypePrefix: '',
+                //prefix to add to uppercase letters in the job type (except first uppercase letter)
+                jobTypePrefixUppercase: ''
             }
 
         },
@@ -125,7 +153,7 @@ module.exports = function(sails) {
                     subscriber = kue.createQueue(config);
 
                     //initialize workers
-                    initializeWorkers();
+                    initializeWorkers(config);
 
                     //attach workerPool
                     hook.workerPool = subscriber;
@@ -155,6 +183,19 @@ module.exports = function(sails) {
                     // finalize subscriber setup
                     done();
                 });
+        },
+
+        reload: function(done) {
+            sails.log.info('Reloading sails-hook-subscriber.');
+            done = done || function(){};
+            //get extended config
+            var config = sails.config[this.configKey];
+
+            subscriber.workers = [];
+
+            initializeWorkers(config);
+
+            done();
         }
     };
 

@@ -20,5 +20,11 @@ module.exports.subscriber = {
     promotionDelay: 6000,
     //number of delated jobs
     //to be promoted
-    promotionLimit: 300
+    promotionLimit: 300,
+
+    //prefix to add to job types
+    jobTypePrefix: '',
+
+    //prefix to add to uppercase letters in the job type (except first uppercase letter)
+    jobTypePrefixUppercase: ''
 }
