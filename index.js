@@ -26,7 +26,6 @@ module.exports = function(sails) {
         if (config.jobTypePrefixUppercase) {
             // Convert first letter to lowercase, so that doesn't get prefixed.
             jobType = jobType
-                    .replace(/\W+/g, config.jobTypePrefixUppercase)
                     .replace(/([a-z\d])([A-Z])/g, '$1' + config.jobTypePrefixUppercase + '$2');
         }
         // Convert job type entirely to lowercase
