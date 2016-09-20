@@ -126,6 +126,25 @@ module.exports.subscriber = {
 }
 ```
 
+## Kue UI
+
+Add these lines into your config/http.js
+```
+customMiddleware: function (app) {
+  var kue = require('kue')
+  var ui = require('kue-ui')
+
+  ui.setup({
+    apiURL: '/api',
+    baseURL: '/kue',
+    updateInterval: 5000
+  })
+
+  app.use('/api', kue.app)
+  app.use('/kue', ui.app)
+}
+```
+Kue UI will be accessable at /kue URL.
 
 ## Testing
 
