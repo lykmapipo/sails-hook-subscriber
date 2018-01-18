@@ -39,7 +39,7 @@
     },
     "dependencies": {
         "include-all": "^0.1.6",
-        "kue": "^0.11.5",
+        "kue": "^0.11.6",
         "lodash": "^3.10.1"
     },
     "devDependencies": {
