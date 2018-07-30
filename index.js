@@ -67,6 +67,18 @@ module.exports = function(sails) {
                 );
         });
     }
+    /**
+     * Retrieve the default hooks configs with any other global redis config
+     */
+    function getDefaultConfig() {
+      //get extended default config
+      var config = sails.config[this.configKey] || {};
+      // extend any custom redis configs based on specific global env config
+      if (sails.config.redis) 
+        config = Object.assign(config, {'redis':Object.assign(config.redis, sails.config.redis)})
+    
+      return config;
+    }
 
     //reference kue based queue
     var subscriber;
@@ -125,7 +137,7 @@ module.exports = function(sails) {
             var hook = this;
 
             //get extended config
-            var config = sails.config[this.configKey];
+            var config = getDefaultConfig.call(this);
 
             // Lets wait on some of the sails core hooks to
             // finish loading before 
@@ -188,7 +200,7 @@ module.exports = function(sails) {
             sails.log.info('Reloading sails-hook-subscriber.');
             done = done || function(){};
             //get extended config
-            var config = sails.config[this.configKey];
+            var config = getDefaultConfig.call(this);
 
             subscriber.workers = [];
 
