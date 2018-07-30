@@ -74,9 +74,10 @@ module.exports = function(sails) {
       //get extended default config
       var config = sails.config[this.configKey] || {};
       // extend any custom redis configs based on specific global env config
-      if (sails.config.redis) 
-        config = Object.assign(config, {'redis':Object.assign(config.redis, sails.config.redis)})
-    
+      if (sails.config.redis) {
+        config = Object.assign(config, {'redis':Object.assign(config.redis, sails.config.redis)});
+      }
+  
       return config;
     }
 

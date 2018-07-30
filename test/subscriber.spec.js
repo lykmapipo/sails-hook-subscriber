@@ -24,6 +24,11 @@ describe('Hook#subscriber', function() {
         done();
     });
 
+    it('should be able to use redis config from global sails.config', function(done) {
+      expect(sails.config.subscriber.redis.host).to.equal(sails.config.redis.host);
+      done();
+    });
+
     it('should be active per default', function(done) {
         expect(sails.config.subscriber.active).to.be.true;
 
